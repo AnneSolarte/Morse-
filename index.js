@@ -67,6 +67,7 @@ io.on('connect', (socket) => {
  
 
     socket.on('disconnect', () => {
+      playersConnected -= 1
       console.log("Cliente desconectado:", socket.id);
     
     })
