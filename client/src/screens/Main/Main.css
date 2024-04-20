@@ -1,0 +1,60 @@
+
+.main-div{
+    background: rgb(10,181,163);
+    background: linear-gradient(180deg, rgba(10,181,163,1) 0%, rgba(255,255,255,1) 100%);
+}
+
+.morse-code-container{
+    display: flex;
+    position: fixed;
+    top: 60%;
+    margin: auto;
+    width: 95%;
+    height: 25rem;
+    background-color: rgba(255, 255, 255, 0.408);
+    border: 2px solid;
+    border-color: gray;
+    margin: 0;
+    justify-content: center;
+    border-radius: 5em;
+  }
+  
+  span{
+    font-size: 80px;
+    margin-right: 10px;
+  }
+  
+  .title{
+    display: flex;
+    justify-content: center;
+    margin: 0;
+  }
+  
+  .current-letter{
+    font-size: 10rem;
+    margin: 0;
+  }
+  
+  .message-div{
+    display: flex;
+    position: absolute;
+    top: 22rem;
+    padding: 1rem;
+    border-radius: 50rem;
+    left: 43%;
+    width: 10rem;
+    height: 10rem;
+    background-color: aliceblue;
+    justify-content: center;
+    align-items: center;
+    color: rgb(233, 232, 232);
+  }
+  
+  #incorrect-div{
+    background-color: rgb(210, 54, 64);
+    
+  }
+  
+  #correct-div{
+    background-color: rgb(96, 210, 54);
+  }
