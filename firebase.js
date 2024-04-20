@@ -3,12 +3,13 @@ const { getFirestore, collection, setDoc, doc, addDoc, updateDoc, getDocs, query
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDirmSw1ZPQIdi6WH8DQYDUjZR06axEfxY",
-  authDomain: "bop-it-ea393.firebaseapp.com",
-  projectId: "bop-it-ea393",
-  storageBucket: "bop-it-ea393.appspot.com",
-  messagingSenderId: "826106732628",
-  appId: "1:826106732628:web:08c00540ff046616b84dc1"
+  apiKey: "AIzaSyCTHdvl-E3Q7Bgq29SK_LZDgfZIM8jZgq0",
+  authDomain: "morse-a2c59.firebaseapp.com",
+  projectId: "morse-a2c59",
+  storageBucket: "morse-a2c59.appspot.com",
+  messagingSenderId: "349418542284",
+  appId: "1:349418542284:web:f56c8e75c2337bea67de69",
+  measurementId: "G-TDFE2B7ZJL"
 };
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
