@@ -53,29 +53,8 @@ const EditUserDB = async (user) => {
     }
 };
 
-const getUsersDB = async () => {
-    try {
-      // Crear una consulta para ordenar los usuarios por 'score' de mayor a menor
-      const q = query(collection(db, "users"), orderBy("score", "desc"));
-  
-      const querySnapshot = await getDocs(q);
-      const transformed = [];
-  
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        transformed.push({ id: doc.id, ...data });
-      });
-  
-      return transformed;
-    } catch (error) {
-      console.error("Error getting users: ", error);
-      return [];
-    }
-};
-
 module.exports.db = db;
 module.exports = {
     createUserDB,
-    EditUserDB,
-    getUsersDB,
+    EditUserDB
 };

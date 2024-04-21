@@ -52,10 +52,47 @@ app.get('/', (req, res) => {
   res.send('¡Hola Mundo!');
 });
 
+const User = {
+    id: 0,
+    name: "",
+    email: "",
+    score: 0
+  }
+
 
 io.on('connect', (socket) => { 
 
-    playersConnected += 1
+    socket.on('user-data', async (data) => {
+      // ... código para manejar la conexión del jugador ...
+          socket.clientType = 'player';  // Asignar un tipo al socket para saber que es un jugador
+          playersConnected++;
+          console.log("players connected:", playersConnected);
+
+          let userToCreate;
+          let playerKey;
+
+          userToCreate = 
+            {
+              id: socket.userId,
+              name: data.name,
+              email: data.email,
+              score: 0
+            }
+
+
+          // Crear usuario en Firestore y esperar los datos actualizados
+          try {
+            const updatedUser = await Firebase.createUserDB(userToCreate);
+
+            // Almacena el ID de Firebase en el objeto socket
+            socket.userId = updatedUser.id; // Asumiendo que updatedUser contiene el ID de Firebase
+
+            console.log('Enviado a Firebase y al cliente:', updatedUser);
+          } catch (error) {
+            console.error("Error al crear usuario en Firebase:", error);
+          }
+        });
+
     
     console.log("players connected:", playersConnected)
 
@@ -64,6 +101,8 @@ io.on('connect', (socket) => {
       socket.emit('pressed', data);
     });
     
+
+
  
 
     socket.on('disconnect', () => {

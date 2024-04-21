@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import io from 'socket.io-client'
 import './Main.css'
+import { Message } from './Message/Message'
 
 export const Main = () => {
   const [morseCode, setMorseCode] = useState('')
@@ -230,17 +231,11 @@ export const Main = () => {
       </div>
 
       {state === 'correct' && (
-        <div className='message-div' id='correct-div'>
-          <h2>Correct</h2>
-          <img src='' alt='' />
-        </div>
+        <Message type='correct' text='Correct' />
       )}
 
       {state === 'incorrect' && (
-        <div className='message-div' id='incorrect-div'>
-          <h2>Incorrect</h2>
-          <img src='' alt='' />
-        </div>
+        <Message type='incorrect' text='Incorrect' />
       )}
 
     </div>
