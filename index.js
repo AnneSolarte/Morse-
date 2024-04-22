@@ -52,7 +52,7 @@ app.get('/', (req, res) => {
   res.send('¡Hola Mundo!');
 });
 
-const User = {
+let User = {
     id: 0,
     name: "",
     email: "",
@@ -61,24 +61,24 @@ const User = {
 
 
 io.on('connect', (socket) => { 
+  playersConnected++;
+  console.log("players connected:", playersConnected);
 
     socket.on('user-data', async (data) => {
-      // ... código para manejar la conexión del jugador ...
-          socket.clientType = 'player';  // Asignar un tipo al socket para saber que es un jugador
-          playersConnected++;
-          console.log("players connected:", playersConnected);
+  
+          socket.clientType = 'player'; 
 
           let userToCreate;
-          let playerKey;
 
           userToCreate = 
             {
               id: socket.userId,
               name: data.name,
               email: data.email,
-              score: 0
+              score: data.score
             }
-
+          User = userToCreate
+          
 
           // Crear usuario en Firestore y esperar los datos actualizados
           try {
@@ -100,10 +100,22 @@ io.on('connect', (socket) => {
       console.log("this is my data", data);
       socket.emit('pressed', data);
     });
+
+    socket.on('update-score', async (score) => {
+      try {
+        
+        // Actualizar el puntaje del usuario
+        User.score = score;
     
+        // Actualizar el usuario en Firestore
+        await Firebase.EditUserDB(User);
+    
+        console.log('Puntaje actualizado para el usuario:', user);
+      } catch (error) {
+        console.error('Error al actualizar el puntaje del usuario:', error);
+      }
+    });
 
-
- 
 
     socket.on('disconnect', () => {
       playersConnected -= 1

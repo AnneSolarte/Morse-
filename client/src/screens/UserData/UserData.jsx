@@ -1,9 +1,7 @@
-import { useState } from 'react'
 import './UserData.css'
+import PropTypes from 'prop-types'
 
-export const UserData = () => {
-  const [user, setUser] = useState({})
-
+export const UserData = ({ user, setUser, setCurrentPage }) => {
   const onSubmmit = e => {
     e.preventDefault()
 
@@ -16,6 +14,7 @@ export const UserData = () => {
 
     console.log(dataUser)
     setUser(dataUser)
+    setCurrentPage('main')
   }
 
   const onChangeText = e => {
@@ -57,4 +56,10 @@ export const UserData = () => {
 
     </div>
   )
+}
+
+UserData.propTypes = {
+  user: PropTypes.object,
+  setUser: PropTypes.func,
+  setCurrentPage: PropTypes.func
 }

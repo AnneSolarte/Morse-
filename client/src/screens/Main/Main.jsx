@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
-import io from 'socket.io-client'
 import './Main.css'
 import { Message } from './Message/Message'
+import PropTypes from 'prop-types'
 
-export const Main = () => {
-  const [morseCode, setMorseCode] = useState('')
+export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, userScore }) => {
   const [currentLetter, setCurrentLetter] = useState(null)
   const [currentWord, setCurrentWord] = useState('')
   const [state, setState] = useState('writing')
@@ -57,44 +56,28 @@ export const Main = () => {
 
   const levels = {
     Nivel1: [
-      'Te', 'Tia', 'Tina'
+      'Te'
     ],
     Nivel2: [
-      'Dos', 'Dado', 'Casa'
+      'Dos'
     ],
     Nivel3: [
-      'Wify', 'Yuca', 'Barco'
+      'Wify'
     ]
   }
-
   useEffect(() => {
-    const socket = io.connect('http://localhost:3000', { path: '/real-time' })
-    socket.emit('player-connected')
-
-    socket.on('pressed', (data) => {
-      console.log('llega la data:', data)
-      setMorseCode(prevMorseCode => prevMorseCode + data)
-      console.log('morseCode:', morseCode)
-    })
-
     const level = 'Nivel' + currentLevel
     const levelArray = levels[level]
     const currentWordInit = levelArray[currentIndexWord]
     setCurrentWord(currentWordInit)
 
     const arrayLetters = currentWordInit.split('').map(letter => letter.toUpperCase())
-    console.log(arrayLetters)
     setCurrentWordLetters(arrayLetters)
 
     const letter = arrayLetters[currentIndexLetter]
-    console.log('current letter', letter)
     setCurrentLetter(letter)
 
-    setMorseCode('')
-
-    return () => {
-      socket.disconnect()
-    }
+    setMorseCode('') // Esto podría no ser necesario aquí, depende de tu lógica
   }, [])
 
   useEffect(() => {
@@ -119,6 +102,7 @@ export const Main = () => {
         if (morseCodeClean === morseCurrentLetter) {
           console.log('in useEffect correct')
           setState('correct')
+          setUserScore(prevScore => prevScore + 1)
           nextLetter()
         } else {
           console.log('in useEffect incorrect')
@@ -201,6 +185,7 @@ export const Main = () => {
         } else {
           alert('No hay más niveles')
           console.log('No hay más niveles disponibles')
+          setCurrentPage('score')
           // Aquí puedes manejar lo que quieres hacer cuando no haya más niveles disponibles
         }
       }
@@ -214,6 +199,7 @@ export const Main = () => {
   return (
     <div className='main-div'>
       <h1 className='title'>MORSE CODE</h1>
+      <h2>Score: {userScore} </h2>
       <h2>Level: {currentLevel} </h2>
       <h2 className='current-word'>{currentWord}</h2>
 
@@ -240,4 +226,12 @@ export const Main = () => {
 
     </div>
   )
+}
+
+Main.propTypes = {
+  setCurrentPage: PropTypes.func,
+  setMorseCode: PropTypes.func,
+  setUserScore: PropTypes.func,
+  morseCode: PropTypes.string,
+  userScore: PropTypes.number
 }
