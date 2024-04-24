@@ -1,36 +1,68 @@
 
 .main-div{
-    background: rgb(10,181,163);
-    background: linear-gradient(180deg, rgba(10,181,163,1) 0%, rgba(255,255,255,1) 100%);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .morse-code-container{
     display: flex;
-    position: fixed;
-    top: 60%;
-    margin: auto;
     width: 95%;
     height: 25rem;
     background-color: rgba(255, 255, 255, 0.408);
     border: 2px solid;
-    border-color: gray;
+    border-color: rgba(128, 128, 128, 0.547);
     margin: 0;
+    margin-top: 2rem;
     justify-content: center;
+
     border-radius: 5em;
   }
-  
+
+  .header-text{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .score-text{
+    font-size: 2rem;
+    color: #304b48;
+    margin-right: 2rem;
+
+  }
+
+  .level-text{
+    font-size: 2rem;
+    color: #304b48;
+    margin-right: 2rem;
+  }
+
   span{
     font-size: 80px;
     margin-right: 10px;
   }
   
-  .title{
+  .word-div{
     display: flex;
-    justify-content: center;
-    margin: 0;
+    flex-direction: row;
+    margin-top: 4rem;
+  }
+
+  .word-letter{
+    font-size: 12rem;
+    color: #22978B;
+    margin-right: 2rem;
+  }
+
+  .word-letter-select{
+    font-size: 12rem;
+    color: #e2ae12;
+    margin-right: 2rem;
   }
   
-  .current-letter{
+  .letter-text{
     font-size: 10rem;
     margin: 0;
   }
@@ -57,4 +89,14 @@
   
   #correct-div{
     background-color: rgb(96, 210, 54);
+  }
+
+  h2{
+    margin: 0;
+    margin-top: 1rem;
+  }
+
+  h1{
+    margin: 0;
+    margin-top: 1rem;
   }

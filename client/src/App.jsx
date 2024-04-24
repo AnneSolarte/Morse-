@@ -7,7 +7,7 @@ import { Main } from './screens/Main/Main'
 import { Score } from './screens/Score/Score'
 
 function App () {
-  const [currentPage, setCurrentPage] = useState('user-data')
+  const [currentPage, setCurrentPage] = useState('main')
   const [morseCode, setMorseCode] = useState('')
   const [user, setUser] = useState({ name: '', email: '' })
   const [userScore, setScoreUser] = useState(0)
@@ -38,7 +38,7 @@ function App () {
   }, [currentPage])
 
   return (
-    <div>
+    <div className='app'>
       {currentPage === 'home' && <Home setCurrentPage={setCurrentPage} />}
       {currentPage === 'user-data' && <UserData setCurrentPage={setCurrentPage} user={user} setUser={setUser} />}
       {currentPage === 'main' && <Main setCurrentPage={setCurrentPage} morseCode={morseCode} setMorseCode={setMorseCode} userScore={userScore} setUserScore={setScoreUser} />}

@@ -93,9 +93,6 @@ io.on('connect', (socket) => {
           }
         });
 
-    
-    console.log("players connected:", playersConnected)
-
     parser.on('data', (data) => {
       console.log("this is my data", data);
       socket.emit('pressed', data);
@@ -115,7 +112,6 @@ io.on('connect', (socket) => {
         console.error('Error al actualizar el puntaje del usuario:', error);
       }
     });
-
 
     socket.on('disconnect', () => {
       playersConnected -= 1

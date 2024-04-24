@@ -56,13 +56,13 @@ export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, us
 
   const levels = {
     Nivel1: [
-      'Te'
+      'TE'
     ],
     Nivel2: [
-      'Dos'
+      'DOS'
     ],
     Nivel3: [
-      'Wify'
+      'WIFY'
     ]
   }
   useEffect(() => {
@@ -84,6 +84,7 @@ export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, us
     if (currentLetter) {
       const morseCodeClean = morseCode.trim().toLowerCase().replace(/[^.-]/g, '') // Limpiar morseCode
       console.log(morseCodeClean)
+      console.log('current word', currentWord)
 
       console.log('Current letter', currentLetter)
       // Buscar la letra 'A' en el arreglo morseLetters
@@ -101,17 +102,26 @@ export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, us
 
         if (morseCodeClean === morseCurrentLetter) {
           console.log('in useEffect correct')
-          setState('correct')
-          setUserScore(prevScore => prevScore + 1)
-          nextLetter()
+          setTimeout(() => {
+            setState('correct')
+            setUserScore(prevScore => prevScore + 1)
+            setTimeout(() => {
+              nextLetter()
+            }, 800)
+          }, 500)
         } else {
           console.log('in useEffect incorrect')
-          setState('incorrect')
-          nextLetter()
+          setTimeout(() => {
+            setState('incorrect')
+            setTimeout(() => {
+              nextLetter()
+            }, 800)
+          }, 500)
         }
       }
     }
   }, [morseCode, currentLetter])
+
   const nextLetter = () => {
     const indexLetter = currentIndexLetter + 1
     console.log('indexLetter', indexLetter)
@@ -198,12 +208,22 @@ export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, us
 
   return (
     <div className='main-div'>
-      <h1 className='title'>MORSE CODE</h1>
-      <h2>Score: {userScore} </h2>
-      <h2>Level: {currentLevel} </h2>
-      <h2 className='current-word'>{currentWord}</h2>
 
-      <h1 className='current-letter'>{currentLetter}</h1>
+      <div className='header-text'>
+        <h2 className='score-text'>Score: {userScore} </h2>
+        <h2 className='level-text'>Level: {currentLevel} </h2>
+      </div>
+
+      <div className='word-div'>
+        {
+          currentWordLetters.map((letter, index) => {
+            if (letter === currentLetter) {
+              return <h1 key={index} className='word-letter-select'>{letter}</h1>
+            }
+            return <h1 key={index} className='word-letter'>{letter}</h1>
+          })
+        }
+      </div>
 
       <div className='morse-code-container'>
         {morseCode.split('').map((char, index) => {
