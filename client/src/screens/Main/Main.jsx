@@ -1,70 +1,23 @@
 import { useEffect, useState } from 'react'
 import './Main.css'
-import { Message } from './Message/Message'
+import { Message } from '../../components/Message/Message'
 import PropTypes from 'prop-types'
+import morseLetters from '../../services/morseLettersData'
+import levels from '../../services/levelsData'
+import { NextLevelMessage } from '../../components/NextLevelMessage/NextLevelMessage'
+import Timer from '../../components/Timer/Timer'
 
 export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, userScore }) => {
+  const [timeLeft, setTimeLeft] = useState(3)
   const [currentLetter, setCurrentLetter] = useState(null)
   const [currentWord, setCurrentWord] = useState('')
+  const [currentImgMorse, setCurrentImgMorse] = useState('')
   const [state, setState] = useState('writing')
   const [currentLevel, setCurrentLevel] = useState(1)
   const [currentIndexWord, setCurrentIndexWord] = useState(0)
   const [currentIndexLetter, setCurrentIndexLetter] = useState(0)
   const [currentWordLetters, setCurrentWordLetters] = useState([])
 
-  const morseLetters = [
-    { letter: 'A', morse: '.-' },
-    { letter: 'B', morse: '-...' },
-    { letter: 'C', morse: '-.-.' },
-    { letter: 'D', morse: '-..' },
-    { letter: 'E', morse: '.' },
-    { letter: 'F', morse: '..-.' },
-    { letter: 'G', morse: '--.' },
-    { letter: 'H', morse: '....' },
-    { letter: 'I', morse: '..' },
-    { letter: 'J', morse: '.---' },
-    { letter: 'K', morse: '-.-' },
-    { letter: 'L', morse: '.-..' },
-    { letter: 'M', morse: '--' },
-    { letter: 'N', morse: '-.' },
-    { letter: 'Ñ', morse: '--.--' },
-    { letter: 'O', morse: '---' },
-    { letter: 'P', morse: '.--.' },
-    { letter: 'Q', morse: '--.-' },
-    { letter: 'R', morse: '.-.' },
-    { letter: 'S', morse: '...' },
-    { letter: 'T', morse: '-' },
-    { letter: 'U', morse: '..-' },
-    { letter: 'V', morse: '...-' },
-    { letter: 'W', morse: '.--' },
-    { letter: 'X', morse: '-..-' },
-    { letter: 'Y', morse: '-.--' },
-    { letter: 'Z', morse: '--..' }
-  ]
-
-  // const levels = {
-  //   "Nivel1": [
-  //     "Te", "Tia", "Tina", "Nina", "Nieta", "Mate", "Tema", "Misa", "Seta", "Antes", "Tinta", "Oso", "Sano", "Risa"
-  //   ],
-  //   "Nivel2": [
-  //     "Dos", "Dado", "Casa", "Arco", "Giro", "Goma", "Una", "Cuna", "Horas", "Huerto", "Lima", "Alita", "Feo", "Cafe", "Piano", "Opera", "Vida", "Uva"
-  //   ],
-  //   "Nivel3": [
-  //     "Wify", "Yuca", "Barco", "Bien", "Camboya", "Kiwi", "Rock", "Kiosco", "Jaula", "Joya", "Marisco", "Grave", "Taxi", "Boxeo", "Bohemio", "Queso", "Quiebra", "Zapato", "Gozar"
-  //   ]
-  // };
-
-  const levels = {
-    Nivel1: [
-      'TE'
-    ],
-    Nivel2: [
-      'DOS'
-    ],
-    Nivel3: [
-      'WIFY'
-    ]
-  }
   useEffect(() => {
     const level = 'Nivel' + currentLevel
     const levelArray = levels[level]
@@ -81,6 +34,19 @@ export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, us
   }, [])
 
   useEffect(() => {
+    const intervalo = setInterval(() => {
+      if (timeLeft > 0) {
+        setTimeLeft(timeLeft - 1)
+      } else {
+        clearInterval(intervalo) // Detener el temporizador cuando llega a 0
+      }
+    }, 1000) // Ejecutar cada segundo
+
+    // Limpiar el intervalo cuando el componente se desmonta
+    return () => clearInterval(intervalo)
+  }, [timeLeft]) // Dependencia de tiempoRestante ejecuta solo en el montaje inicial
+
+  useEffect(() => {
     if (currentLetter) {
       const morseCodeClean = morseCode.trim().toLowerCase().replace(/[^.-]/g, '') // Limpiar morseCode
       console.log(morseCodeClean)
@@ -93,6 +59,8 @@ export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, us
 
       // Acceder al código morse de la letra 'A'
       const morseCurrentLetter = letter.morse
+      const morseCurrentImg = letter.img
+      setCurrentImgMorse(morseCurrentImg)
 
       console.log('morse letter', morseCurrentLetter)
       console.log('Letter', currentLetter, 'morse', morseCurrentLetter)
@@ -125,8 +93,17 @@ export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, us
   const nextLetter = () => {
     const indexLetter = currentIndexLetter + 1
     console.log('indexLetter', indexLetter)
+    if (state === 'writing') {
+      if (currentLevel === 1 | 2 | 3) {
+        setTimeLeft(3)
+      } else if (currentLevel === 4) {
+        setTimeLeft(2)
+      } else if (currentLevel === 5) {
+        setTimeLeft(1)
+      }
+    }
 
-    // Verificar si hemos llegado al final de la palabra actual
+    // Final de la currentWord?
     if (indexLetter < currentWordLetters.length) {
       console.log('Encontrar la siguiente letra')
       setCurrentIndexLetter(indexLetter)
@@ -138,12 +115,12 @@ export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, us
       setCurrentIndexLetter(0)
       setCurrentLetter('')
 
-      // Si ya estamos al final de la palabra, avanzamos a la siguiente palabra
+      // Final de currentWord -> NextWord
       console.log('Next index Word', currentIndexWord + 1)
       setCurrentIndexWord(currentIndexWord + 1)
       const level = 'Nivel' + currentLevel
       const levelArray = levels[level]
-      const nextWord = levelArray[currentIndexWord + 1] // Aquí cambiamos currentIndexWord a currentIndexWord + 1
+      const nextWord = levelArray[currentIndexWord + 1]
       console.log('Next word', nextWord)
 
       if (nextWord) {
@@ -154,7 +131,6 @@ export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, us
         console.log(arrayLetters)
         setCurrentWordLetters(arrayLetters)
 
-        // Reiniciamos el índice de la letra a cero para la nueva palabra
         setCurrentIndexLetter(0)
 
         // Actualizamos currentLetter después de establecer currentWordLetters
@@ -164,40 +140,44 @@ export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, us
       } else {
         console.log('Final del nivel, pasando al siguiente nivel')
 
-        // Si no hay más palabras en el nivel actual, avanzamos al siguiente nivel
-        setCurrentLevel(currentLevel + 1)
-        const nextLevel = 'Nivel' + (currentLevel + 1)
-        console.log('Siguiente nivel:', nextLevel)
+        setTimeout(() => {
+          setState('next-level')
+          setTimeout(() => {
+            // Si no hay más palabras en el nivel actual, avanzamos al siguiente nivel
+            setCurrentLevel(currentLevel + 1)
+            const nextLevel = 'Nivel' + (currentLevel + 1)
+            console.log('Siguiente nivel:', nextLevel)
 
-        // Verificar si hay un siguiente nivel
-        if (levels[nextLevel]) {
-          // Reiniciamos el índice de la palabra a cero para el nuevo nivel
-          setCurrentIndexWord(0)
-          setCurrentWord('')
+            // Verificar si hay un siguiente nivel
+            if (levels[nextLevel]) {
+              setState('writing')
+              // Reiniciamos el índice de la palabra a cero para el nuevo nivel
+              setCurrentIndexWord(0)
+              setCurrentWord('')
 
-          // Obtenemos la primera palabra del nuevo nivel
-          const firstWord = levels[nextLevel][0]
-          console.log('Primera palabra del siguiente nivel:', firstWord)
-          setCurrentWord(firstWord)
+              // Obtenemos la primera palabra del nuevo nivel
+              const firstWord = levels[nextLevel][0]
+              console.log('Primera palabra del siguiente nivel:', firstWord)
+              setCurrentWord(firstWord)
 
-          // Actualizamos el arreglo de letras de la palabra actual
-          const arrayLetters = firstWord.split('').map(letter => letter.toUpperCase())
-          console.log(arrayLetters)
-          setCurrentWordLetters(arrayLetters)
+              // Actualizamos el arreglo de letras de la palabra actual
+              const arrayLetters = firstWord.split('').map(letter => letter.toUpperCase())
+              console.log(arrayLetters)
+              setCurrentWordLetters(arrayLetters)
 
-          // Reiniciamos el índice de la letra a cero para la nueva palabra
-          setCurrentIndexLetter(0)
+              // Reiniciamos el índice de la letra a cero para la nueva palabra
+              setCurrentIndexLetter(0)
 
-          // Establecemos la primera letra como currentLetter
-          const firstLetter = arrayLetters[0]
-          console.log('Primera letra de la nueva palabra:', firstLetter)
-          setCurrentLetter(firstLetter)
-        } else {
-          alert('No hay más niveles')
-          console.log('No hay más niveles disponibles')
-          setCurrentPage('score')
-          // Aquí puedes manejar lo que quieres hacer cuando no haya más niveles disponibles
-        }
+              // Establecemos la primera letra como currentLetter
+              const firstLetter = arrayLetters[0]
+              console.log('Primera letra de la nueva palabra:', firstLetter)
+              setCurrentLetter(firstLetter)
+            } else {
+              console.log('No hay más niveles disponibles')
+              setCurrentPage('score')
+            }
+          }, 1000)
+        }, 500)
       }
     }
 
@@ -214,6 +194,8 @@ export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, us
         <h2 className='level-text'>Level: {currentLevel} </h2>
       </div>
 
+      <Timer timeLeft={timeLeft} />
+
       <div className='word-div'>
         {
           currentWordLetters.map((letter, index) => {
@@ -224,6 +206,15 @@ export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, us
           })
         }
       </div>
+
+      {
+        timeLeft !== 0
+          ? (
+            <div className='morse-img-div'>
+              <img src={currentImgMorse} />
+            </div>)
+          : null
+      }
 
       <div className='morse-code-container'>
         {morseCode.split('').map((char, index) => {
@@ -242,6 +233,10 @@ export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, us
 
       {state === 'incorrect' && (
         <Message type='incorrect' text='Incorrect' />
+      )}
+
+      {state === 'next-level' && (
+        <NextLevelMessage level={currentLevel} />
       )}
 
     </div>

@@ -1,0 +1,16 @@
+.next-level-div {
+    display: flex;
+    position: absolute;
+    top: 22rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    left: 50%; /* Cambiado a 50% */
+    transform: translateX(-50%); /* Alineación del centro */
+    width: 16rem;
+    height: 8rem;
+    background-color: rgb(215, 151, 24);
+    justify-content: center;
+    align-items: center;
+    color: rgb(233, 232, 232);
+    text-align: center; /* Alineación del texto */
+}

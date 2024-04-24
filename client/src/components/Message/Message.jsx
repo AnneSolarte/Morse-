@@ -1,4 +1,5 @@
 import './Message.css'
+import PropTypes from 'prop-types'
 
 export const Message = ({ type, text }) => {
   return (
@@ -7,4 +8,9 @@ export const Message = ({ type, text }) => {
       <img src='' alt='' />
     </div>
   )
+}
+
+Message.propTypes = {
+  text: PropTypes.string,
+  type: PropTypes.string
 }
