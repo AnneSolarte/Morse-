@@ -7,21 +7,24 @@ import { Main } from './screens/Main/Main'
 import { Score } from './screens/Score/Score'
 
 function App () {
-  const [currentPage, setCurrentPage] = useState('home')
+  const [currentPage, setCurrentPage] = useState('main')
   const [morseCode, setMorseCode] = useState('')
   const [user, setUser] = useState({ name: '', email: '' })
   const [userScore, setScoreUser] = useState(0)
+  const [state, setState] = useState('writing')
 
   useEffect(() => {
     const socket = io.connect('http://localhost:3000', { path: '/real-time' })
 
     socket.emit('player-connected')
 
-    socket.on('pressed', (data) => {
-      console.log('llega la data:', data)
-      setMorseCode(prevMorseCode => prevMorseCode + data)
-      console.log('morseCode:', morseCode)
-    })
+    if (state === 'writing') {
+      socket.on('pressed', (data) => {
+        console.log('llega la data:', data)
+        setMorseCode(prevMorseCode => prevMorseCode + data)
+        console.log('morseCode:', morseCode)
+      })
+    }
 
     if (currentPage === 'score') {
       const userData = {
@@ -42,12 +45,14 @@ function App () {
       {currentPage === 'home' &&
         <Home
           setCurrentPage={setCurrentPage}
+          morseCode={morseCode}
         />}
       {currentPage === 'user-data' &&
         <UserData
           setCurrentPage={setCurrentPage}
           user={user}
           setUser={setUser}
+          morseCode={morseCode}
         />}
       {currentPage === 'main' &&
         <Main
@@ -56,6 +61,8 @@ function App () {
           setMorseCode={setMorseCode}
           userScore={userScore}
           setUserScore={setScoreUser}
+          state={state}
+          setState={setState}
         />}
       {currentPage === 'score' &&
         <Score

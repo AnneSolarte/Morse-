@@ -1,23 +1,17 @@
 .message-div{
     display: flex;
     position: absolute;
-    top: 22rem;
-    padding: 1rem;
+    top: 8rem;
     border-radius: 50rem;
-    left: 43%;
-    width: 10rem;
-    height: 10rem;
+    left: 46%;
+    width: 7rem;
+    height: 7rem;
     background-color: aliceblue;
     justify-content: center;
     align-items: center;
     color: rgb(233, 232, 232);
   }
   
-  #incorrect-div{
-    background-color: rgb(210, 54, 64);
-    
-  }
-  
-  #correct-div{
-    background-color: rgb(96, 210, 54);
+  .message-div img{
+    width: 100%
   }

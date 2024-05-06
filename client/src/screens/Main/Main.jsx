@@ -7,13 +7,13 @@ import levels from '../../services/levelsData'
 import { NextLevelMessage } from '../../components/NextLevelMessage/NextLevelMessage'
 import Timer from '../../components/Timer/Timer'
 
-export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, userScore }) => {
-  const [timeLeft, setTimeLeft] = useState(3)
+export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, userScore, state, setState }) => {
+  const [timeLeft, setTimeLeft] = useState(0)
   const [currentLetter, setCurrentLetter] = useState(null)
   const [currentWord, setCurrentWord] = useState('')
   const [currentImgMorse, setCurrentImgMorse] = useState('')
-  const [state, setState] = useState('writing')
-  const [currentLevel, setCurrentLevel] = useState(1)
+  const [currentWordIcon, setCurrentWordIcon] = useState('')
+  const [currentLevel, setCurrentLevel] = useState(5)
   const [currentIndexWord, setCurrentIndexWord] = useState(0)
   const [currentIndexLetter, setCurrentIndexLetter] = useState(0)
   const [currentWordLetters, setCurrentWordLetters] = useState([])
@@ -62,6 +62,9 @@ export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, us
       const morseCurrentImg = letter.img
       setCurrentImgMorse(morseCurrentImg)
 
+      const morseCurrentWordIcon = letter.word
+      setCurrentWordIcon(morseCurrentWordIcon)
+
       console.log('morse letter', morseCurrentLetter)
       console.log('Letter', currentLetter, 'morse', morseCurrentLetter)
 
@@ -94,12 +97,12 @@ export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, us
     const indexLetter = currentIndexLetter + 1
     console.log('indexLetter', indexLetter)
     if (state === 'writing') {
-      if (currentLevel === 1 | 2 | 3) {
-        setTimeLeft(3)
-      } else if (currentLevel === 4) {
+      if (currentLevel === 1) {
         setTimeLeft(2)
-      } else if (currentLevel === 5) {
+      } else if (currentLevel === 2) {
         setTimeLeft(1)
+      } else if (currentLevel === 3 | 4) {
+        setTimeLeft(0)
       }
     }
 
@@ -139,7 +142,7 @@ export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, us
         setCurrentLetter(nextLetter)
       } else {
         console.log('Final del nivel, pasando al siguiente nivel')
-
+        setState('next-level')
         setTimeout(() => {
           setState('next-level')
           setTimeout(() => {
@@ -197,34 +200,35 @@ export const Main = ({ setCurrentPage, morseCode, setMorseCode, setUserScore, us
       <Timer timeLeft={timeLeft} />
 
       <div className='word-div'>
-        {
-          currentWordLetters.map((letter, index) => {
-            if (letter === currentLetter) {
-              return <h1 key={index} className='word-letter-select'>{letter}</h1>
-            }
-            return <h1 key={index} className='word-letter'>{letter}</h1>
-          })
-        }
+        {currentWordLetters.map((letter, index) => {
+          if (index === currentIndexLetter) {
+            return <h1 key={index} className='word-letter-select'>{letter}</h1>
+          }
+          return <h1 key={index} className='word-letter'>{letter}</h1>
+        })}
       </div>
 
       {
-        timeLeft !== 0
+        (timeLeft !== 0 && state === 'writing')
           ? (
             <div className='morse-img-div'>
               <img src={currentImgMorse} />
+              <h2>{currentWordIcon}</h2>
             </div>)
           : null
       }
 
       <div className='morse-code-container'>
-        {morseCode.split('').map((char, index) => {
-          if (char === '.') {
-            return <span key={index} className='morse-dot'>.</span>
-          } else if (char === '-') {
-            return <span key={index} className='morse-dash'>_</span>
-          }
-          return null
-        })}
+        {state === 'writing' && timeLeft === 0 && (
+          morseCode.split('').map((char, index) => {
+            if (char === '.') {
+              return <span key={index} className='morse-dot'>.</span>
+            } else if (char === '-') {
+              return <span key={index} className='morse-dash'>_</span>
+            }
+            return null
+          })
+        )}
       </div>
 
       {state === 'correct' && (
@@ -248,5 +252,7 @@ Main.propTypes = {
   setMorseCode: PropTypes.func,
   setUserScore: PropTypes.func,
   morseCode: PropTypes.string,
-  userScore: PropTypes.number
+  userScore: PropTypes.number,
+  state: PropTypes.string,
+  setState: PropTypes.func
 }

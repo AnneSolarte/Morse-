@@ -1,5 +1,7 @@
 import './UserData.css'
 import PropTypes from 'prop-types'
+import img from '../../assets/title.png'
+import img2 from '../../assets/morsa.png'
 
 export const UserData = ({ user, setUser, setCurrentPage }) => {
   const onSubmmit = e => {
@@ -25,6 +27,8 @@ export const UserData = ({ user, setUser, setCurrentPage }) => {
 
   return (
     <div className='user-data-div'>
+      <img src={img} className='img' />
+      <img src={img2} className='img2' />
       <div className='form-card'>
         <form onSubmit={onSubmmit} className='form'>
           <input

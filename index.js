@@ -47,7 +47,6 @@ const io = require('socket.io')(server, {
 
 let playersConnected = 0;
 
-
 app.get('/', (req, res) => {
   res.send('¡Hola Mundo!');
 });
